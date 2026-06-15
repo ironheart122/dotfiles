@@ -1,0 +1,59 @@
+# ─────────────────────────────────────────────────────────────────────────
+# Whitelist strategy: ~/.config holds many dirs with secrets (gh token,
+# browser profiles, 1Password, etc.). Ignore EVERYTHING, then re-include only
+# the curated, secret-free desktop configs below.
+# ─────────────────────────────────────────────────────────────────────────
+/*
+
+# Repo meta
+!/.gitignore
+!/README.md
+
+# Tracked config directories
+!/hypr/
+!/waybar/
+!/walker/
+!/alacritty/
+!/ghostty/
+!/kitty/
+!/mako/
+!/btop/
+!/fastfetch/
+!/lazygit/
+!/omarchy/
+
+# Tracked single files
+!/starship.toml
+
+# ── Within tracked dirs: drop noise, logs, local state ──
+# editor/backup clutter, anywhere
+*.bak
+*.bak.*
+*.save
+*~
+# hypr: runtime logs + local Claude data
+hypr/*.log
+hypr/.claude/
+
+# omarchy: keep themes/branding/hooks; drop stock wallpapers + transient state
+omarchy/backgrounds/
+omarchy/current/
+omarchy/**/*.png
+omarchy/**/*.jpg
+omarchy/**/*.jpeg
+omarchy/**/*.webp
+
+# ── Defense-in-depth: never commit secrets/keys, wherever they appear ──
+*.key
+*.pem
+*.gpg
+*.kdbx
+*.p12
+id_rsa*
+id_ed25519*
+.env
+.env.*
+.netrc
+*secret*
+*token*
+*.credentials
