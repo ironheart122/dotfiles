@@ -1,47 +1,35 @@
 # ─────────────────────────────────────────────────────────────────────────
-# Whitelist strategy: ~/.config holds many dirs with secrets (gh token,
-# browser profiles, 1Password, etc.). Ignore EVERYTHING, then re-include only
-# the curated, secret-free desktop configs below.
+# Whitelist strategy: ignore everything at the root, re-include only the
+# managed trees. Within those, drop runtime noise and (defense-in-depth)
+# anything that smells like a secret.
 # ─────────────────────────────────────────────────────────────────────────
 /*
 
 # Repo meta
 !/.gitignore
 !/README.md
+!/install.sh
 
-# Tracked config directories
-!/hypr/
-!/waybar/
-!/walker/
-!/alacritty/
-!/ghostty/
-!/kitty/
-!/mako/
-!/btop/
-!/fastfetch/
-!/lazygit/
-!/omarchy/
+# Managed trees (install.sh symlinks their entries into $HOME)
+!/dot_config/
+!/dot_claude/
 
-# Tracked single files
-!/starship.toml
-
-# ── Within tracked dirs: drop noise, logs, local state ──
+# ── Runtime noise inside managed trees ──
 # editor/backup clutter, anywhere
 *.bak
 *.bak.*
 *.save
 *~
 # hypr: runtime logs + local Claude data
-hypr/*.log
-hypr/.claude/
-
+dot_config/hypr/*.log
+dot_config/hypr/.claude/
 # omarchy: keep themes/branding/hooks; drop stock wallpapers + transient state
-omarchy/backgrounds/
-omarchy/current/
-omarchy/**/*.png
-omarchy/**/*.jpg
-omarchy/**/*.jpeg
-omarchy/**/*.webp
+dot_config/omarchy/backgrounds/
+dot_config/omarchy/current/
+dot_config/omarchy/**/*.png
+dot_config/omarchy/**/*.jpg
+dot_config/omarchy/**/*.jpeg
+dot_config/omarchy/**/*.webp
 
 # ── Defense-in-depth: never commit secrets/keys, wherever they appear ──
 *.key
@@ -57,3 +45,4 @@ id_ed25519*
 *secret*
 *token*
 *.credentials
+.credentials.json

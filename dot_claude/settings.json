@@ -1,0 +1,78 @@
+{
+  "env": {
+    "DISABLE_AUTOUPDATER": "1",
+    "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(psql:*)",
+      "Bash(pnpm run typecheck:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(find:*)",
+      "Bash(pnpm run typeorm:generate-migration:*)",
+      "Bash(pnpm run typecheck:all:*)",
+      "Bash(git log:*)",
+      "WebFetch(domain:httpbin.org)",
+      "Bash(npx tsx:*)",
+      "Bash(node -p:*)",
+      "Bash(git branch:*)",
+      "Bash(PGPASSWORD=postgres psql:*)",
+      "Bash(docker exec:*)",
+      "Bash(pnpm run typeorm:run-migrations:*)",
+      "Bash(netstat:*)",
+      "Bash(curl:*)",
+      "Bash(git fetch:*)",
+      "Bash(git rebase:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr list:*)",
+      "Bash(cat:*)",
+      "Bash(bun run typecheck:*)",
+      "Bash(bun run format:*)",
+      "Bash(git commit:*)",
+      "Bash(git add:*)",
+      "Bash(bunx wrangler whoami:*)",
+      "WebFetch(domain:developers.cloudflare.com)",
+      "Bash(ls:*)",
+      "Bash(git -C /home/ironheart122/Work/projects/kyros-labs/get-signal-inbox.com/ascent-webapp log --oneline -5)",
+      "Bash(bun add:*)",
+      "Bash(git filter-branch:*)"
+    ],
+    "deny": [],
+    "ask": [],
+    "defaultMode": "auto"
+  },
+  "model": "claude-fable-5[1m]",
+  "skillOverrides": {
+    "review": "off",
+    "copywriting": "off",
+    "seo-audit": "off",
+    "prototype": "off",
+    "vercel-react-best-practices": "off",
+    "improve-codebase-architecture": "off",
+    "find-skills": "off",
+    "grill-with-docs": "off",
+    "to-issues": "off",
+    "grill-me": "off",
+    "to-prd": "off"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bunx -y ccstatusline@latest",
+    "padding": 0,
+    "refreshInterval": 10
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true,
+    "context7@claude-plugins-official": true
+  },
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "medium",
+  "autoUpdatesChannel": "latest",
+  "tui": "fullscreen",
+  "skipWorkflowUsageWarning": true,
+  "editorMode": "normal",
+  "verbose": true,
+  "preferredNotifChannel": "ghostty",
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true
+}
