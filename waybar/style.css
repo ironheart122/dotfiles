@@ -31,10 +31,8 @@
 }
 
 #cpu,
-#battery,
 #pulseaudio,
 #custom-omarchy,
-
 #custom-update {
   min-width: 12px;
   margin: 0 7.5px;
@@ -50,10 +48,6 @@
 
 #network {
   margin-right: 13px;
-}
-
-#custom-expand-icon {
-  margin-right: 18px;
 }
 
 tooltip {
@@ -73,9 +67,7 @@ tooltip {
 }
 
 
-#custom-screenrecording-indicator,
-#custom-idle-indicator,
-#custom-notification-silencing-indicator {
+#custom-screenrecording-indicator {
   min-width: 12px;
   margin-left: 5px;
   margin-right: 0;
@@ -85,29 +77,4 @@ tooltip {
 
 #custom-screenrecording-indicator.active {
   color: #a55555;
-}
-
-#custom-voxtype {
-  min-width: 12px;
-  margin: 0 0 0 7.5px;
-}
-
-#custom-voxtype.recording {
-  color: #a55555;
-}
-
-#custom-idle-indicator.active,
-#custom-notification-silencing-indicator.active {
-  color: #a55555;
-}
-
-#custom-weather {
-  margin-left: 7.5px;
-  margin-right: 7.5px;
-}
-
-#custom-weather.unavailable {
-  min-width: 0;
-  margin: 0;
-  padding: 0;
 }

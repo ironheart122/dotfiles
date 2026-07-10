@@ -17,7 +17,7 @@ confirm-close-surface=false
 resize-overlay = never
 window-show-tab-bar=always
 
-# Cursor stlying
+# Cursor styling
 cursor-style = "block"
 cursor-style-blink = true
 # no-title: ghostty's integration sets the title to the running command on preexec.
