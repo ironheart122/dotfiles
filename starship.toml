@@ -1,43 +1,22 @@
 # Get editor completions based on the config schema
 "$schema" = 'https://starship.rs/config-schema.json'
 
-add_newline = true
-command_timeout = 1000
-format = "[$directory$git_branch$git_status]($style) $cmd_duration$character"
+# Intentionally minimal — stock starship. Everything uses the built-in defaults;
+# anything you want to change goes below as an override (only specify what differs).
+# See what's currently active with:  starship print-config
+# Previous Omarchy config is backed up next to this file as starship.toml.bak.<epoch>.
 
-[cmd_duration]
-style = "bold yellow"
-show_milliseconds = true
-min_time = 500
-format = 'took [$duration]($style) '
-
-[character]
-error_symbol = "[λ](bold red)"
-success_symbol = "[λ](bold green)"
-
-[directory]
-truncation_length = 2
-truncation_symbol = "…/"
-repo_root_style = "bold cyan"
-repo_root_format = "[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
-read_only = " 󰌾"
-
-[git_branch]
-format = "[$symbol$branch]($style) "
-style = "italic cyan"
-symbol = " "
-
-[git_status]
-format     = '[$all_status]($style)'
-style      = "cyan"
-ahead      = "⇡${count} "
-diverged   = "⇕⇡${ahead_count}⇣${behind_count} "
-behind     = "⇣${count} "
-conflicted = " "
-up_to_date = " "
-untracked  = "? $count} "
-modified   = " ${count} "
-stashed    = ""
-staged     = "+${count} "
-renamed    = ""
-deleted    = ""
+# At-a-glance "you're in a linked worktree" signal: shown only there (absent in
+# the main checkout), and names the MAIN repo — never the worktree's own name,
+# which $directory/$git_branch already show. (Dropped a second module that just
+# repeated the worktree's folder name — redundant whenever the worktree is named
+# after its branch, which is the common convention and duplicated every segment.)
+# Derived from --git-common-dir (shared by every worktree), not from cwd, so it
+# always names the ORIGINAL checkout regardless of which worktree you're in.
+[custom.repo_base]
+description = "Main repo name, shown only when inside a linked worktree"
+when        = 'test -f "$(git rev-parse --git-dir 2>/dev/null)/gitdir"'
+command     = 'basename "$(dirname "$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)")"'
+symbol      = " "
+style       = "bold blue"
+format      = "[$symbol$output]($style) "

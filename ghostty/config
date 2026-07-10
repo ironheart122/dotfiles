@@ -1,21 +1,28 @@
-# Dynamic theme colors
-config-file = ?"~/.config/omarchy/current/theme/ghostty.conf"
+# Ghostty theme: Snazzy (built-in; see `ghostty +list-themes`. "Snazzy Soft" = softer).
+# NOTE: Ghostty lets explicitly-set colors override `theme` no matter the order, so the
+# Omarchy dynamic-theme include is commented out below — otherwise its palette would win
+# over Snazzy. To follow Omarchy themes again: remove `theme` and re-enable the include.
+theme = Snazzy
+# config-file = ?"~/.config/omarchy/current/theme/ghostty.conf"
 
 # Font
-font-family = "CaskaydiaMono Nerd Font"
-font-style = Regular
+font-family = "JetBrainsMono Nerd Font Mono"
+font-style = Medium
 font-size = 16
 
 # Window
-window-padding-x = 14
-window-padding-y = 14
+window-padding-x = 16
+window-padding-y = 16
 confirm-close-surface=false
 resize-overlay = never
+window-show-tab-bar=always
 
 # Cursor stlying
 cursor-style = "block"
-cursor-style-blink = false
-shell-integration-features = no-cursor
+cursor-style-blink = true
+# no-title: ghostty's integration sets the title to the running command on preexec.
+# The title is instead pinned to the CWD by a hook in ~/.zshrc.
+shell-integration-features = no-cursor,no-title
 
 # Keyboard bindings
 keybind = f11=toggle_fullscreen
