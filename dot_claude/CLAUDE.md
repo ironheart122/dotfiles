@@ -28,7 +28,6 @@ For Cloudflare work, prefer the cloudflare:* skills and cloudflare-* MCP servers
 ## General Preferences
 
 - If asked to do too much work at once, stop and state that clearly please.
-- If computer use is helpful for completing or verifying work, shell out to GPT-5.6 with Codex for it.
 
 ## Picking the right model for the task
 
@@ -49,20 +48,22 @@ my effectively-free Claude tier. Fable 5 is premium and metered (see cliff note)
 | fable-5   | 1    | 10           | 9     |
 
 _Table last tuned: 2026-07-11. Cost = budget/window efficiency on Max 5x (higher = lighter
-footprint), not API list price._
+footprint), not API list price. Haiku is excluded deliberately: never use Haiku —
+too weak for my work at any price._
 
-Fable 5 cliff (Max 5x, updated 2026-07-08):
-- Burns the 5-hour window ~2x+ faster than Opus (steeper in long agentic runs).
-- Capped at 50% of weekly limits; promotion EXTENDED (Anthropic tweet) — included
-  access now ends 2026-07-12 23:59:59 PT, then paid usage credits ($10/$50 per
-  Mtok). Treat as premium/metered, not a default.
-- Weekly usage ~80% spent as of 2026-07-08; the Monday 07:30 reset buys ~36
-  hours of included Fable max before promo end. The pre-reveal PR-2/3/4 stack
-  audit runs MONDAY Jul 13 post-reset (user-fixed 2026-07-08), fully by Fable.
-  Everything else: Opus/Sonnet/GPT — Fable sessions run as ORCHESTRATOR per the
-  `codex-first` skill (Codex implements; Claude specs/reviews/verifies).
-- After 2026-07-12: confirm actual credit terms on the Claude usage dashboard
-  before any Fable invocation (dashboard is truth).
+Fable 5 cliff (Max 5x):
+- Burns the 5-hour window ~2x+ faster than Opus (steeper in long agentic runs);
+  capped at 50% of weekly limits. Treat as premium/metered, never a default.
+- Included promo access ends 2026-07-12 23:59:59 PT (= 2026-07-13 ~12:30 IST),
+  then paid usage credits ($10/$50 per Mtok).
+- The pre-reveal PR-2/3/4 stack audit runs in the final included window:
+  Monday 2026-07-13, from the 07:30 reset until promo end ~12:30 IST (~5 hours),
+  fully by Fable. Everything else: Opus/Sonnet/GPT — Fable sessions run as
+  ORCHESTRATOR per the `codex-first` skill (Codex implements; Claude
+  specs/reviews/verifies).
+- After promo end: the Claude usage dashboard is truth — confirm actual credit
+  terms there before any Fable invocation, and the main-session default model
+  should be back on Opus 4.8.
 
 How to apply:
 - Default Claude driver: Opus 4.8. It's included and strong across the board.
@@ -80,29 +81,20 @@ How to apply:
 - Reviews of plans/implementations: Opus 4.8 by default; a GPT pass (Codex or
   Opencode) as an independent second perspective; reserve Fable for high-stakes
   reviews only.
-- Never use Haiku.
+- If computer use is helpful for completing or verifying work, shell out to
+  GPT-5.6 with Codex for it.
 
 Which tool reaches which model:
 - Claude (opus-4.8, sonnet-5, fable-5): Claude Code — main agent and subagents
   via the `model` param.
-- GPT (bulk/mechanical, second opinions): the proxenos MCP server
-  (`delegate_task`) for repo-targeted delegation from Claude Code; Codex CLI
-  (`codex exec` / `codex review`; defaults in ~/.codex/config.toml) for
-  scripted/headless one-shots; Opencode (ChatGPT auth) for interactive GPT work.
-- GPT runs in its own tool. Routing SSoT for hands-on repo work is the
-  `codex-first` skill (~/.claude/skills/codex-first/, added 2026-07-08): raw
-  `codex exec --yolo -C <repo>` with temp-file prompts + `resume` follow-ups.
-  proxenos remains the tool when isolated-worktree parallel delegation is the
-  point: each delegation runs a Codex worker in an isolated git worktree and
-  returns a unified diff, orchestrator-run verification exit code, declared
-  obstacles, and quota usage. Spec discipline: the worker has no conversation
-  context — write the task like a ticket, seed the right files, always set
-  `allowedPaths` and a `verification.command`, and review `obstacles` before
-  applying the patch. Delegations draw from the same ChatGPT subscription
-  window as interactive Codex — parallel dispatch has real cost even at $0.
-  The Codex model comes from ~/.codex/config.toml (the SSoT) — never pin
-  `model` in proxenos worker profiles. Raw `codex exec` / `codex review` via
-  Bash remains for non-repo one-shots (e.g. review second opinions). Neither
-  from inside a Claude Code workflow. (proxenos — ~/Work/projects/proxenos —
-  is the thin-Codex-wrapper pattern Theo alluded to, now with a reference
-  implementation.)
+- GPT hands-on repo work: the `codex-first` skill (~/.claude/skills/codex-first/)
+  is the routing SSoT — read it, don't improvise. Quick decision rule: raw
+  `codex exec` (or the skill's flow) for sequential repo work and non-repo
+  one-shots (e.g. review second opinions); the proxenos MCP server
+  (`delegate_task`) when isolated-worktree PARALLEL delegation is the point.
+  Details (spec discipline, allowedPaths, verification, model config) live in
+  the skill and proxenos docs (~/Work/projects/proxenos) — the Codex model
+  comes from ~/.codex/config.toml, never pinned elsewhere. Delegations draw
+  from the same ChatGPT subscription window as interactive Codex. Neither from
+  inside a Claude Code workflow.
+- Opencode (ChatGPT auth) for interactive GPT work.
