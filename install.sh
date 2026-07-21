@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Symlink repo-managed dotfiles into place. Idempotent; safe to rerun.
 #
+#   dot_zshrc                -> ~/.zshrc
 #   dot_config/<entry>        -> ~/.config/<entry>          (whole dirs/files)
 #   dot_claude/skills/<skill> -> ~/.claude/skills/<skill>   (per-skill, so
 #       unmanaged skills and symlinks into ~/.agents keep working alongside)
@@ -28,6 +29,8 @@ link() {
 }
 
 mkdir -p "$HOME/.config" "$HOME/.claude/skills"
+
+link "$REPO/dot_zshrc" "$HOME/.zshrc"
 
 for entry in "$REPO"/dot_config/*; do
   link "$entry" "$HOME/.config/$(basename "$entry")"

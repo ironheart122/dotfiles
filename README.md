@@ -8,6 +8,7 @@ each managed entry into `$HOME`, so editing a live config file edits the repo.
 
 | Path | Links to | What |
 |------|----------|------|
+| `dot_zshrc` | `~/.zshrc` | Public shell configuration; optionally sources private `~/.zshrc.local` |
 | `dot_config/hypr/` | `~/.config/hypr` | Hyprland — window rules, keybindings, monitors, look & feel, idle/lock |
 | `dot_config/waybar/` | `~/.config/waybar` | Status bar layout + styling |
 | `dot_config/walker/` | `~/.config/walker` | Application launcher |
@@ -37,6 +38,8 @@ git clone <this-repo> ~/dotfiles
 
 **Adding something new to manage:** move the real dir/file into `dot_config/`
 (or `dot_claude/`) and rerun `install.sh` — it symlinks whatever is there.
+Keep machine-, credential-, and work-specific shell configuration in
+`~/.zshrc.local`; `dot_zshrc` sources it when present but does not track it.
 Skills under `dot_claude/skills/` are linked one by one, so downloaded skill
 collections (e.g. symlinks into `~/.agents`) coexist untouched.
 
