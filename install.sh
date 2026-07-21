@@ -3,6 +3,7 @@
 #
 #   dot_zshrc                -> ~/.zshrc
 #   dot_config/<entry>        -> ~/.config/<entry>          (whole dirs/files)
+#   dot_codex/config.toml     -> ~/.codex/config.toml
 #   dot_claude/skills/<skill> -> ~/.claude/skills/<skill>   (per-skill, so
 #       unmanaged skills and symlinks into ~/.agents keep working alongside)
 #   dot_claude/<entry>        -> ~/.claude/<entry>          (CLAUDE.md, agents, ...)
@@ -28,9 +29,10 @@ link() {
   echo "linked:    $dst -> $src"
 }
 
-mkdir -p "$HOME/.config" "$HOME/.claude/skills"
+mkdir -p "$HOME/.config" "$HOME/.claude/skills" "$HOME/.codex"
 
 link "$REPO/dot_zshrc" "$HOME/.zshrc"
+link "$REPO/dot_codex/config.toml" "$HOME/.codex/config.toml"
 
 for entry in "$REPO"/dot_config/*; do
   link "$entry" "$HOME/.config/$(basename "$entry")"

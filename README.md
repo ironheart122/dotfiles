@@ -18,6 +18,7 @@ each managed entry into `$HOME`, so editing a live config file edits the repo.
 | `dot_config/lazygit/` | `~/.config/lazygit` | Git TUI |
 | `dot_config/starship.toml` | `~/.config/starship.toml` | Shell prompt |
 | `dot_config/omarchy/` | `~/.config/omarchy` | Custom theme, branding, hooks |
+| `dot_codex/config.toml` | `~/.codex/config.toml` | Sanitized Codex CLI preferences |
 | `dot_claude/skills/` | `~/.claude/skills/<skill>` | Homemade Claude Code skills (linked per-skill) |
 | `dot_claude/agents/` | `~/.claude/agents` | Custom subagent definitions |
 | `dot_claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | Global Claude Code instructions |
