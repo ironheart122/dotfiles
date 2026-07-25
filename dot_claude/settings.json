@@ -43,7 +43,6 @@
     "ask": [],
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5[1m]",
   "skillOverrides": {
     "review": "off",
     "copywriting": "off",
@@ -77,12 +76,11 @@
     }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
   "autoUpdatesChannel": "latest",
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
   "editorMode": "normal",
-  "verbose": true,
   "preferredNotifChannel": "ghostty",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
