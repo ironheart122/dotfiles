@@ -54,7 +54,9 @@
     "grill-with-docs": "off",
     "to-issues": "off",
     "grill-me": "off",
-    "to-prd": "off"
+    "to-prd": "off",
+    "teach": "off",
+    "setup-matt-pocock-skills": "off"
   },
   "statusLine": {
     "type": "command",
