@@ -12,3 +12,6 @@ service_tier = "default"
 status_line = ["model-with-reasoning", "current-dir", "model", "reasoning", "project-name", "git-branch", "branch-changes", "run-state", "context-remaining", "five-hour-limit", "weekly-limit", "codex-version"]
 status_line_use_colors = true
 theme = "sublime-snazzy"
+
+[projects."/home/ironheart122/Work/projects/claude-usage-dashboard"]
+trust_level = "trusted"
