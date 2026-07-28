@@ -25,12 +25,13 @@ Run from the repo dir (`review` has no `-C`). Result prints to stdout (no `-o`, 
 (cd <repo> && command codex review --commit <sha> 2>/dev/null)    # a single commit
 ```
 
-### Focused review — custom instructions, default scope
+### Focused review — custom instructions, no scope flag
 
-Instructions via temp file on stdin, never inline quoting. **No scope flag:**
+Instructions via temp file on stdin, never inline quoting:
 
 ```bash
 P=$(mktemp); cat >"$P" <<'EOF'
+Review the changes shown by `git diff` and `git diff --cached` in this repo.
 Focus: <what to scrutinize — e.g. correctness of X, concurrency in Y, error paths>.
 Ignore: style, naming, formatting.
 For each finding: file:line, severity, why it's wrong, suggested fix.
@@ -38,23 +39,29 @@ EOF
 (cd <repo> && command codex review - <"$P" 2>/dev/null)
 ```
 
-Default scope is `git diff` + `git diff --cached` — **tracked changes only**. An untracked file is silently absent from the review rather than erroring, so a new file gets no scrutiny at all and nothing says so. `git add` it first (`-N` is enough).
+**A custom prompt gets no diff and no default scope** — verified: asked what it was handed before running anything, it answers `NONE`. The prompt is passed verbatim and that is all the model receives. So the prompt must name what to review, or the model improvises a scope (usually by running `git diff` itself) and you will not be told which files it settled on. A prompt that only says "focus on X" can review nothing at all.
+
+Once the prompt points at `git diff`/`git diff --cached`, untracked files are outside it: a brand-new file draws no scrutiny and nothing says so. `git add` it first (`-N` is enough).
 
 ### Focused review of a branch diff
 
-Needs both halves, so present the branch diff as working-tree changes in a throwaway worktree:
+Needs both halves, so present the branch diff as working-tree changes in a throwaway worktree. Chained on `&&` deliberately — a broken setup otherwise reaches a paid review of an empty tree:
 
 ```bash
-WT=$(mktemp -d)/wt; P=<instructions file>
-git worktree add --detach "$WT" <base>
-git diff <base>...<branch> | git -C "$WT" apply
-ln -s "$PWD/node_modules" "$WT/node_modules"   # so the reviewer can actually run tests
-EX="$(git rev-parse --git-common-dir)/info/exclude"
-printf 'node_modules\n' >> "$EX"               # gitignore's `node_modules/` won't match a symlink
-git -C "$WT" add -A                            # else new files fall out of scope, see above
-(cd "$WT" && command codex review - <"$P" 2>/dev/null)
-git worktree remove --force "$WT"              # then drop the exclude line again
+set -o pipefail
+REPO=$(git rev-parse --show-toplevel); WT=$(mktemp -d)/wt; P=<instructions file>
+# Detach at the merge base, not the base tip: `<base>...<branch>` is a
+# merge-base-to-branch patch, so if base has moved on it won't apply cleanly —
+# and if it does, the tree isn't the branch's.
+git worktree add --detach "$WT" "$(git merge-base <base> <branch>)" &&
+  git diff --binary <base>...<branch> | git -C "$WT" apply &&   # --binary or binary files fail to apply
+  git -C "$WT" add -A &&                                        # stage BEFORE linking deps, see below
+  { [ -d "$REPO/node_modules" ] && ln -s "$REPO/node_modules" "$WT/node_modules" || true; } &&
+  (cd "$WT" && command codex review - <"$P" 2>/dev/null)
+git -C "$REPO" worktree remove --force "$WT"
 ```
+
+Order matters: stage first, then symlink. Reversed, `git add -A` stages the `node_modules` symlink into the review (gitignore's `node_modules/` has a trailing slash and doesn't match a link), and the usual fix — appending to `.git/info/exclude` — writes to the *shared* common dir, survives `worktree remove`, and quietly accumulates.
 
 Give the reviewer a runnable tree when the findings are numerical — "prove it with arithmetic" is worth far more than an assertion, and it can't if the deps aren't there.
 
