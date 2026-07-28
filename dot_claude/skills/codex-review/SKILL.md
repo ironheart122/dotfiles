@@ -13,20 +13,21 @@ Caveat: if Codex implemented the diff (via `$codex-first`), Codex reviewing it i
 
 ## Invoke
 
-Run from the repo dir (`review` has no `-C`). Result prints to stdout (no `-o`, unlike `exec`); stderr suppressed as usual. Review is read-only — no `--yolo` needed. Always pass an explicit scope flag:
+Run from the repo dir (`review` has no `-C`). Result prints to stdout (no `-o`, unlike `exec`); stderr suppressed as usual. Review is read-only — no `--yolo` needed.
+
+**A scope flag and a custom prompt are mutually exclusive** (codex-cli 0.145.0). `--base`, `--uncommitted`, and `--commit` each fail with `error: the argument '--X' cannot be used with '[PROMPT]'`. Pick one of the three forms below; you cannot have both in a single call.
+
+### Generic review, explicit scope
 
 ```bash
-# uncommitted work (staged + unstaged + untracked)
-(cd <repo> && command codex review --uncommitted 2>/dev/null)
-
-# branch diff vs base
-(cd <repo> && command codex review --base main 2>/dev/null)
-
-# a single commit
-(cd <repo> && command codex review --commit <sha> 2>/dev/null)
+(cd <repo> && command codex review --uncommitted 2>/dev/null)     # staged + unstaged + untracked
+(cd <repo> && command codex review --base main 2>/dev/null)       # branch diff vs base
+(cd <repo> && command codex review --commit <sha> 2>/dev/null)    # a single commit
 ```
 
-Focused review — custom instructions via temp file on stdin, never inline quoting:
+### Focused review — custom instructions, default scope
+
+Instructions via temp file on stdin, never inline quoting. **No scope flag:**
 
 ```bash
 P=$(mktemp); cat >"$P" <<'EOF'
@@ -34,8 +35,28 @@ Focus: <what to scrutinize — e.g. correctness of X, concurrency in Y, error pa
 Ignore: style, naming, formatting.
 For each finding: file:line, severity, why it's wrong, suggested fix.
 EOF
-(cd <repo> && command codex review --uncommitted - <"$P" 2>/dev/null)
+(cd <repo> && command codex review - <"$P" 2>/dev/null)
 ```
+
+Default scope is `git diff` + `git diff --cached` — **tracked changes only**. An untracked file is silently absent from the review rather than erroring, so a new file gets no scrutiny at all and nothing says so. `git add` it first (`-N` is enough).
+
+### Focused review of a branch diff
+
+Needs both halves, so present the branch diff as working-tree changes in a throwaway worktree:
+
+```bash
+WT=$(mktemp -d)/wt; P=<instructions file>
+git worktree add --detach "$WT" <base>
+git diff <base>...<branch> | git -C "$WT" apply
+ln -s "$PWD/node_modules" "$WT/node_modules"   # so the reviewer can actually run tests
+EX="$(git rev-parse --git-common-dir)/info/exclude"
+printf 'node_modules\n' >> "$EX"               # gitignore's `node_modules/` won't match a symlink
+git -C "$WT" add -A                            # else new files fall out of scope, see above
+(cd "$WT" && command codex review - <"$P" 2>/dev/null)
+git worktree remove --force "$WT"              # then drop the exclude line again
+```
+
+Give the reviewer a runnable tree when the findings are numerical — "prove it with arithmetic" is worth far more than an assertion, and it can't if the deps aren't there.
 
 - `command codex` bypasses the interactive zsh wrapper; if not on PATH: `fnm exec --using default -- codex`
 - effort bump for high-stakes reviews: `-c model_reasoning_effort="high"`
