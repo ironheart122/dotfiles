@@ -43,6 +43,9 @@
     "teach": "off",
     "setup-matt-pocock-skills": "off"
   },
+  "worktree": {
+    "baseRef": "fresh"
+  },
   "statusLine": {
     "type": "command",
     "command": "bunx -y ccstatusline@2.2.27",
@@ -63,7 +66,7 @@
     }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "medium",
+  "effortLevel": "xhigh",
   "autoUpdatesChannel": "latest",
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,

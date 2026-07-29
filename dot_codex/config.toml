@@ -1,5 +1,5 @@
 model = "gpt-5.6-sol"
-model_reasoning_effort = "high"
+model_reasoning_effort = "xhigh"
 personality = "pragmatic"
 sandbox_mode = "danger-full-access"
 approval_policy = "never"
@@ -14,4 +14,7 @@ status_line_use_colors = true
 theme = "sublime-snazzy"
 
 [projects."/home/ironheart122/Work/projects/claude-usage-dashboard"]
+trust_level = "trusted"
+
+[projects."/home/ironheart122/dotfiles"]
 trust_level = "trusted"
