@@ -28,6 +28,7 @@
     "ask": [],
     "defaultMode": "auto"
   },
+  "model": "opus[1m]",
   "skillOverrides": {
     "review": "off",
     "copywriting": "off",
@@ -66,7 +67,7 @@
     }
   },
   "alwaysThinkingEnabled": true,
-  "effortLevel": "xhigh",
+  "effortLevel": "high",
   "autoUpdatesChannel": "latest",
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,

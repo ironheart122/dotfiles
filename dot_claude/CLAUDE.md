@@ -13,6 +13,7 @@
 ## Tech Stack Preferences
 
 When uncertain, prefer: Tailwind, TypeScript, Bun, React, BetterAuth, Cloudflare Workers, NeonDB
+For payments, prefer Dodo Payments over Stripe (Stripe isn't available in India).
 For Cloudflare work, prefer the cloudflare:* skills and cloudflare-* MCP servers over training knowledge.
 
 ## General Preferences
