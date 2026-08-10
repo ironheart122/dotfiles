@@ -19,16 +19,15 @@
       "Bash(pnpm run typeorm:generate-migration:*)",
       "Bash(bunx wrangler whoami:*)",
       "Bash(bun add:*)",
-      "WebFetch(domain:developers.cloudflare.com)"
+      "WebFetch(domain:developers.cloudflare.com)",
+      "Bash(curl:*)"
     ],
     "deny": [
-      "Bash(curl:*)",
       "Bash(rm -rf:*)"
     ],
     "ask": [],
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
   "skillOverrides": {
     "review": "off",
     "copywriting": "off",
@@ -75,5 +74,6 @@
   "preferredNotifChannel": "ghostty",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "model": "claude-fable-5[1m]"
 }
