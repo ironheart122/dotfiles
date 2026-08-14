@@ -3,12 +3,14 @@
 # Omarchy dynamic-theme include is commented out below — otherwise its palette would win
 # over Snazzy. To follow Omarchy themes again: remove `theme` and re-enable the include.
 theme = Snazzy
-# config-file = ?"~/.config/omarchy/current/theme/ghostty.conf"
+# config-file = ?"~/.local/state/omarchy/current/theme/ghostty.conf"
 
 # Font
 font-family = "JetBrainsMono Nerd Font Mono"
 font-style = Medium
-font-size = 16
+# Size is deliberately kept out of this file — see font-size.conf for why.
+# Path is relative to this file; a later include wins over an earlier value.
+config-file = font-size.conf
 
 # Window
 window-padding-x = 16
@@ -28,15 +30,14 @@ shell-integration-features = no-cursor,no-title
 keybind = f11=toggle_fullscreen
 keybind = shift+insert=paste_from_clipboard
 keybind = control+insert=copy_to_clipboard
-# Send Shift+Enter as CSI-u so TUIs can distinguish it from Enter.
-keybind = shift+enter=csi:13;2u
+# Send Shift+Enter as ESC+CR, which Claude Code and similar TUIs read as "insert newline".
+keybind = shift+enter=text:\x1b\r
 # Legacy encoding sends Alt+Shift+Enter the same as Alt+Enter; send CSI-u so tmux can match M-S-Enter.
 keybind = alt+shift+enter=csi:13;4u
 keybind = super+control+shift+alt+arrow_down=resize_split:down,100
 keybind = super+control+shift+alt+arrow_up=resize_split:up,100
 keybind = super+control+shift+alt+arrow_left=resize_split:left,100
 keybind = super+control+shift+alt+arrow_right=resize_split:right,100
-keybind = shift+enter=text:\x1b\r
 
 # Slowdown mouse scrolling
 mouse-scroll-multiplier = 0.95
