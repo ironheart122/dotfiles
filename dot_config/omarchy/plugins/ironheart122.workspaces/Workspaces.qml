@@ -44,6 +44,24 @@ BarWidget {
     return ids
   }
 
+  // The workspace this bar's own monitor is displaying. `Hyprland.focusedWorkspace`
+  // is global — exactly one across all screens — so on a two-monitor setup the
+  // unfocused bar would mark nothing. Upstream renders an identical 1-10 strip on
+  // every bar so it never noticed; once workspaceIds() is filtered per screen, each
+  // bar has to read its own monitor's active workspace instead.
+  readonly property int monitorWorkspaceId: {
+    var values = Hyprland.monitors.values
+    for (var i = 0; i < values.length; i++) {
+      var mon = values[i]
+      if (mon.name !== root.screenName) continue
+      return mon.activeWorkspace ? mon.activeWorkspace.id : -1
+    }
+
+    // No screen match (screenName empty, or the monitor vanished mid-hotplug):
+    // fall back to global focus so something is always marked.
+    return Hyprland.focusedWorkspace ? Hyprland.focusedWorkspace.id : -1
+  }
+
   function focusWorkspace(id) {
     if (!root.bar) return
     root.bar.run("hyprctl dispatch " + Util.shellQuote("hl.dsp.focus({ workspace = \"" + id + "\" })"))
@@ -70,12 +88,19 @@ BarWidget {
 
         readonly property var workspace: root.workspaceById(modelData)
         readonly property bool occupied: workspace !== null && workspace.toplevels.values.length > 0
+        // Current on THIS bar's monitor — marked on every screen.
+        readonly property bool current: modelData === root.monitorWorkspaceId
+        // ...and additionally holding keyboard focus, which only one screen does.
         readonly property bool focused: Hyprland.focusedWorkspace !== null && Hyprland.focusedWorkspace.id === modelData
 
         bar: root.bar
-        // Focused marker, U+F14FB (nf-md-square_rounded), as an escaped surrogate
+        // Current marker, U+F14FB (nf-md-square_rounded), as an escaped surrogate
         // pair like upstream so the codepoint survives diffs and copy-paste.
-        text: focused ? "\uDB85\uDCFB" : String(modelData)
+        text: current ? "\uDB85\uDCFB" : String(modelData)
+        // Both monitors show a glyph, so the glyph alone can't say which one has the
+        // keyboard. Paint the focused one in the theme's accent (WidgetButton swaps
+        // the label to `activeColor` when `active`) to break the tie.
+        active: focused
         // Dim empty workspaces — but only when the bar has its own background.
         //
         // In transparent mode the bar draws straight over the wallpaper, and
@@ -85,8 +110,8 @@ BarWidget {
         // full opacity. Dimming re-blends it toward the very pixels it was chosen
         // to stand out from, so on a light wallpaper the empty workspaces are the
         // one thing on the bar that goes unreadable. Full opacity keeps the
-        // contrast the helper computed; the focused glyph still marks position.
-        opacity: occupied || focused ? 1 : (root.bar && root.bar.requestedTransparent ? 1 : 0.8)
+        // contrast the helper computed; the glyph and accent still mark position.
+        opacity: occupied || current ? 1 : (root.bar && root.bar.requestedTransparent ? 1 : 0.5)
         horizontalMargin: 6
         verticalPadding: 6
         fixedWidth: root.vertical ? root.barSize : Style.space(20)
