@@ -3,29 +3,56 @@
 Personal [Omarchy](https://omarchy.org) (Arch Linux + Hyprland) desktop and
 tooling configuration. The repo is the source of truth; `install.sh` symlinks
 each managed entry into `$HOME`, so editing a live config file edits the repo.
+(One exception — see the note on `settings.json` below.)
 
 ## Layout
 
 | Path | Links to | What |
 |------|----------|------|
 | `dot_zshrc` | `~/.zshrc` | Public shell configuration; optionally sources private `~/.zshrc.local` |
-| `dot_config/hypr/` | `~/.config/hypr` | Hyprland — window rules, keybindings, monitors, look & feel, idle/lock |
-| `dot_config/waybar/` | `~/.config/waybar` | Status bar layout + styling |
-| `dot_config/walker/` | `~/.config/walker` | Application launcher |
+| `dot_config/hypr/` | `~/.config/hypr` | Hyprland — monitors, keybindings, input, look & feel (Lua) |
+| `dot_config/omarchy/` | `~/.config/omarchy` | Quickshell config, forked bar plugins, custom theme, branding, hooks |
 | `dot_config/{alacritty,ghostty,kitty}/` | `~/.config/…` | Terminal emulators |
-| `dot_config/mako/` | `~/.config/mako` | Notification daemon |
 | `dot_config/{btop,fastfetch}/` | `~/.config/…` | System monitor / fetch |
 | `dot_config/lazygit/` | `~/.config/lazygit` | Git TUI |
 | `dot_config/starship.toml` | `~/.config/starship.toml` | Shell prompt |
-| `dot_config/omarchy/` | `~/.config/omarchy` | Custom theme, branding, hooks |
 | `dot_codex/config.toml` | `~/.codex/config.toml` | Sanitized Codex CLI preferences |
 | `dot_claude/skills/` | `~/.claude/skills/<skill>` | Homemade Claude Code skills (linked per-skill) |
 | `dot_claude/agents/` | `~/.claude/agents` | Custom subagent definitions |
 | `dot_claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | Global Claude Code instructions |
-| `dot_claude/settings.json` | `~/.claude/settings.json` | Claude Code settings |
+| `dot_claude/settings.json` | — | Claude Code settings — **not a live symlink**, see below |
+
+> **`settings.json` drifts.** `install.sh` does symlink it, but the live
+> `~/.claude/settings.json` is a regular file and its contents have diverged
+> from the repo copy — most likely because Claude Code rewrites settings by
+> atomic replace, which swaps a symlink for a real file. Either way the live
+> file is the real config and the repo copy is a stale snapshot. Edit
+> `~/.claude/settings.json` directly, and diff it against the repo before
+> committing anything here.
 
 Dual-monitor layout: workspaces **1–7** (coding/deep work) on the right display,
 **8–14** (docs/browsing) on the left, all persistent.
+
+## Omarchy 4.x (quattro)
+
+Quattro replaced the separate desktop components with a single Quickshell
+process, so configs for waybar, walker, mako, swayosd, hyprlock, and hypridle
+are gone from this repo — the shell owns the bar, launcher, notifications,
+OSDs, and lock screen now, configured via `dot_config/omarchy/shell.toml` and
+`shell.json`. Hyprland's own config also moved from `.conf` to Lua;
+`dot_config/hypr/` is Lua-only, apart from `hyprsunset.conf` and `xdph.conf`,
+which are read by hyprsunset and xdg-desktop-portal-hyprland rather than by
+Hyprland itself.
+
+`dot_config/omarchy/plugins/` holds forked bar widgets. Forking via
+`omarchy plugin clone` keeps local changes safe from package updates —
+currently `ironheart122.workspaces`, which shows per-monitor workspaces with
+occupancy and focus indicators.
+
+**The custom `aether` theme predates quattro** and is in the old per-app
+format (`waybar.css`, `mako.ini`, `hyprlock.conf`, …) with no `colors.toml`,
+which is what quattro themes are built around. It is not the active theme and
+would need porting before it works again.
 
 ## Usage
 
@@ -51,3 +78,7 @@ wallpapers are intentionally **not** tracked — see [`.gitignore`](.gitignore).
 Only hand-edited configuration is committed. `~/.claude/skills/` entries that
 are symlinks into other collections (`~/.agents`, the Omarchy install) are
 left unmanaged here.
+
+Note that the active wallpaper is one of the untracked files, so
+`~/.local/state/omarchy/current/background` points into `dot_config/omarchy/`
+at a path a fresh clone won't have. Pick a background again after installing.
