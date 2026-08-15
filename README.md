@@ -11,8 +11,8 @@ each managed entry into `$HOME`, so editing a live config file edits the repo.
 |------|----------|------|
 | `dot_zshrc` | `~/.zshrc` | Public shell configuration; optionally sources private `~/.zshrc.local` |
 | `dot_config/hypr/` | `~/.config/hypr` | Hyprland — monitors, keybindings, input, look & feel (Lua) |
-| `dot_config/omarchy/` | `~/.config/omarchy` | Quickshell config, forked bar plugins, custom theme, branding, hooks |
-| `dot_config/{alacritty,ghostty,kitty}/` | `~/.config/…` | Terminal emulators |
+| `dot_config/omarchy/` | `~/.config/omarchy` | Quickshell config, forked bar plugins, branding, hooks |
+| `dot_config/ghostty/` | `~/.config/ghostty` | Terminal emulator |
 | `dot_config/{btop,fastfetch}/` | `~/.config/…` | System monitor / fetch |
 | `dot_config/lazygit/` | `~/.config/lazygit` | Git TUI |
 | `dot_config/starship.toml` | `~/.config/starship.toml` | Shell prompt |
@@ -49,10 +49,10 @@ Hyprland itself.
 currently `ironheart122.workspaces`, which shows per-monitor workspaces with
 occupancy and focus indicators.
 
-**The custom `aether` theme predates quattro** and is in the old per-app
-format (`waybar.css`, `mako.ini`, `hyprlock.conf`, …) with no `colors.toml`,
-which is what quattro themes are built around. It is not the active theme and
-would need porting before it works again.
+Themes are no longer tracked here. The custom `aether` theme was dropped: it
+predated quattro (old per-app layout, no `colors.toml`), had gone unused, and
+its palette was byte-identical to upstream `tokyo-night`, which is the active
+theme. Omarchy's own themes live in `/usr/share/omarchy/themes/`.
 
 ## Usage
 
