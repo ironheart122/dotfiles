@@ -84,6 +84,7 @@ BarWidget {
       model: root.workspaceIds()
 
       WidgetButton {
+        id: wsButton
         required property int modelData
 
         readonly property var workspace: root.workspaceById(modelData)
@@ -101,6 +102,24 @@ BarWidget {
         // keyboard. Paint the focused one in the theme's accent (WidgetButton swaps
         // the label to `activeColor` when `active`) to break the tie.
         active: focused
+        // WidgetButton centres its label's *advance box*. The square glyph has a
+        // zero left bearing and ink wider than its advance, so its painted centre
+        // lands ~0.075 * fontSize right of the slot centre; digits measure dead
+        // centre. Invisible on its own, but obvious once the underline below gives
+        // it a reference. OpticalGlyph is upstream's own fix (BarIconButton uses it
+        // for the same reason): it offsets by TextMetrics.tightBoundingRect so the
+        // painted ink is what gets centred. Only the glyph needs it, so digits keep
+        // the plain label rather than being optically nudged against each other.
+        labelVisible: !current
+
+        OpticalGlyph {
+          anchors.fill: parent
+          visible: wsButton.current
+          text: wsButton.text
+          fontFamily: wsButton.fontFamily
+          fontSize: wsButton.fontSize
+          color: wsButton.active && wsButton.useActiveColor ? wsButton.activeColor : wsButton.foreground
+        }
         // Dim empty workspaces — but only when the bar has its own background.
         //
         // In transparent mode the bar draws straight over the wallpaper, and
