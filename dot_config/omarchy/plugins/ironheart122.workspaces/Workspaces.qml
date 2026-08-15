@@ -117,6 +117,28 @@ BarWidget {
         fixedWidth: root.vertical ? root.barSize : Style.space(20)
         fixedHeight: root.barSize
         onPressed: function() { root.focusWorkspace(modelData) }
+
+        // Occupancy underline: present iff the workspace has at least one window.
+        //
+        // The dim above is the only other occupancy cue and it's switched off in
+        // transparent mode, where lowering alpha blends the label back toward the
+        // wallpaper it was picked to contrast against. This says the same thing
+        // without touching contrast — it's drawn at full opacity in the same colour
+        // as the label, so it stays legible on any wallpaper.
+        Rectangle {
+          anchors.horizontalCenter: parent.horizontalCenter
+          anchors.bottom: parent.bottom
+          // Low enough to clear the current workspace's square glyph — any closer
+          // and the two merge into a single blob at a glance.
+          anchors.bottomMargin: Style.space(3)
+          width: Style.space(8)
+          height: Style.space(2)
+          radius: height / 2
+          visible: occupied
+          // Mirror the label so the focused workspace's underline picks up the
+          // accent too, rather than sitting there in the plain foreground.
+          color: active && useActiveColor ? activeColor : foreground
+        }
       }
     }
   }
