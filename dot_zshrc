@@ -340,6 +340,7 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+export PATH="$JAVA_HOME/bin:$PATH"
 
 # Disable Ctrl+S (XOFF) freezing the terminal; frees Ctrl+S/Ctrl+Q for apps to use
 stty -ixon
@@ -410,3 +411,11 @@ wtrm() {
 
 # Machine- and work-specific configuration stays outside the public repository.
 [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+
+# pnpm
+export PNPM_HOME="/home/ironheart122/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end
