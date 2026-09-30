@@ -32,6 +32,9 @@
       ],
       "right": [
         {
+          "id": "omaplug"
+        },
+        {
           "id": "omarchy.tray"
         },
         {
