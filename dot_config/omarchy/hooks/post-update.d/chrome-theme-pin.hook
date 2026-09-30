@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Omarchy pins BrowserThemeColor as a managed Chrome policy, which locks the
+# theme picker in every profile. The policy file is kept as an immutable "{}"
+# so omarchy-theme-set-browser and the browser-policy migrations cannot rewrite
+# it. Warn if an update ever gets past that, rather than trying to fix it here
+# without root.
+
+policy=/etc/opt/chrome/policies/managed/color.json
+
+[[ -e $policy ]] || exit 0
+
+if [[ $(<"$policy") == "{}" ]] && lsattr -d "$policy" 2>/dev/null | cut -c5 | grep -q i; then
+  exit 0
+fi
+
+omarchy-notification-send -u critical -g 󰊯 "Chrome theme policy is back" \
+  "$policy was rewritten by the update. Re-pin it: echo '{}' | sudo tee $policy && sudo chattr +i $policy"
