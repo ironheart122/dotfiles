@@ -58,3 +58,6 @@ conditional-spread rules touch emitted JS. The assertion rules
 ## General Preferences
 
 - If asked to do too much work at once, stop and state that clearly please.
+- No em dashes in any output (prose, code comments, commit messages). Use commas, parentheses, or separate sentences instead.
+- No extra comments that are unnecessary or inconsistent with local style.
+- Keep the final summary concise (1-3 sentences).
