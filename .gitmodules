@@ -1,0 +1,3 @@
+[submodule "dot_config/omarchy/plugins/omaplug"]
+	path = dot_config/omarchy/plugins/omaplug
+	url = https://github.com/fross100/omaplug.git
