@@ -97,11 +97,7 @@ export CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='nano'
-else
-  export EDITOR='nano'
-fi
+export EDITOR='nano'
 
 # Compilation flags
 # export ARCHFLAGS="-arch $(uname -m)"
@@ -120,7 +116,7 @@ fi
 
 # History configurations
 HISTFILE=~/.zsh_history
-HISTSIZE=1000
+HISTSIZE=2500 # above SAVEHIST so hist_expire_dups_first has room to drop dups
 SAVEHIST=2000
 setopt hist_expire_dups_first # delete duplicates first when HISTFILE size exceeds HISTSIZE
 setopt hist_ignore_dups       # ignore duplicated commands history list
@@ -189,7 +185,7 @@ iso2sd() {
     lsblk -d -o NAME | grep -E '^sd[a-z]' | awk '{print "/dev/"$1}'
   else
     sudo dd bs=4M status=progress oflag=sync if="$1" of="$2"
-    sudo eject $2
+    sudo eject "$2"
   fi
 }
 
@@ -217,22 +213,22 @@ format-drive() {
 
 # Transcode a video to a good-balance 1080p that's great for sharing online
 transcode-video-1080p() {
-  ffmpeg -i $1 -vf scale=1920:1080 -c:v libx264 -preset fast -crf 23 -c:a copy ${1%.*}-1080p.mp4
+  ffmpeg -i "$1" -vf scale=1920:1080 -c:v libx264 -preset fast -crf 23 -c:a copy "${1%.*}-1080p.mp4"
 }
 
 # Transcode a video to a good-balance 4K that's great for sharing online
 transcode-video-4K() {
-  ffmpeg -i $1 -c:v libx265 -preset slow -crf 24 -c:a aac -b:a 192k ${1%.*}-optimized.mp4
+  ffmpeg -i "$1" -c:v libx265 -preset slow -crf 24 -c:a aac -b:a 192k "${1%.*}-optimized.mp4"
 }
 
 # Transcode any image to JPG image that's great for shrinking wallpapers
 img2jpg() {
-  magick $1 -quality 95 -strip ${1%.*}.jpg
+  magick "$1" -quality 95 -strip "${1%.*}.jpg"
 }
 
 # Transcode any image to JPG image that's great for sharing online without being too big
 img2jpg-small() {
-  magick $1 -resize 1080x\> -quality 95 -strip ${1%.*}.jpg
+  magick "$1" -resize 1080x\> -quality 95 -strip "${1%.*}.jpg"
 }
 
 # Transcode any image to compressed-but-lossless PNG
@@ -294,21 +290,18 @@ export BAT_THEME=ansi
 
 # . "$HOME/.local/share/../bin/env"
 
-unalias gf
-unalias gau
+unalias gf gau 2>/dev/null
 
 # Go
 export PATH=$PATH:/usr/local/go/bin
-export PATH=$PATH:$(go env GOPATH)/bin
+command -v go &>/dev/null && export PATH=$PATH:$(go env GOPATH)/bin
 
 # Generated for pdtm. Do not edit.
 export PATH="$PATH:$HOME/.pdtm/go/bin"
 
 # direnv hook
-eval "$(direnv hook zsh)"
+command -v direnv &>/dev/null && eval "$(direnv hook zsh)"
 
-setopt HIST_IGNORE_SPACE   # skip commands starting with a space
-setopt HIST_IGNORE_DUPS    # skip duplicates
 setopt HIST_NO_STORE       # don't record `history` command itself
 
 export PATH="$HOME/.local/bin:$PATH"
@@ -316,9 +309,6 @@ export PATH="$HOME/.local/bin:$PATH"
 export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
 export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 
@@ -407,15 +397,16 @@ wtrm() {
 }
 
 # Vite+ bin (https://viteplus.dev)
-. "$HOME/.vite-plus/env"
-
-# Machine- and work-specific configuration stays outside the public repository.
-[[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+[ -s "$HOME/.vite-plus/env" ] && . "$HOME/.vite-plus/env"
 
 # pnpm
-export PNPM_HOME="/home/ironheart122/.local/share/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME/bin:"*) ;;
   *) export PATH="$PNPM_HOME/bin:$PATH" ;;
 esac
 # pnpm end
+
+# Machine- and work-specific configuration stays outside the public repository.
+# Sourced last so it can override anything above.
+[[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
