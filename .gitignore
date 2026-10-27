@@ -49,3 +49,6 @@ id_ed25519*
 *token*
 *.credentials
 .credentials.json
+# pnpm: track only the config; pnpm may write auth or state files beside it
+dot_config/pnpm/*
+!dot_config/pnpm/config.yaml

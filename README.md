@@ -17,6 +17,7 @@ edit the repository. The file `dot_claude/settings.json` is the only exception.
 | `dot_config/omarchy/` | `~/.config/omarchy` | Quickshell configuration, bar plugins, branding, and hooks |
 | `dot_config/ghostty/` | `~/.config/ghostty` | Terminal emulator |
 | `dot_config/btop/` | `~/.config/btop` | System monitor |
+| `dot_config/pnpm/` | `~/.config/pnpm` | Global pnpm configuration. It sets a one-day release cooldown (`minimumReleaseAge`). Git tracks only `config.yaml`. |
 | `dot_config/starship.toml` | `~/.config/starship.toml` | Shell prompt |
 | `dot_config/chrome-flags.conf` | `~/.config/chrome-flags.conf` | Chrome launch flags. These are the Omarchy defaults, with the disk cache in RAM. |
 | `dot_codex/config.toml` | `~/.codex/config.toml` | Codex CLI preferences, with private paths removed |

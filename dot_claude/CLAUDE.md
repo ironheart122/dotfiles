@@ -8,7 +8,7 @@
 
 ## Specs before work
 
-- Before you start any work, write a spec and publish it as an HTML artifact with the Artifact tool. Wait for my approval before you change anything.
+- Before you start any work, write a spec and publish it as an HTML artifact with the Artifact tool. If the Artifact tool is unavailable, put the spec in chat. Wait for my approval before you change anything.
 - Skip the spec for small tasks: a commit or push, a question, a lookup, or a small change whose plan is obvious.
 - You can read files and run read-only commands to write the spec.
 - The spec covers the goal, the planned changes (files and behavior), what is out of scope, open questions, and how you will verify the result.
@@ -19,11 +19,21 @@
 - Match the project's package manager, even npm or yarn.
 - For new projects and one-off scripts, use bun (`bunx`, not `npx`).
 
+## Dependency updates
+
+Supply chain attacks often ship as a new release of a trusted package. `pnpm audit` only flags known advisories, so it misses a malicious version in the hours after it is published. A release-age cooldown is the main defense.
+
+- Before you install or update dependencies, check the package manager's cooldown (for pnpm, `pnpm config get minimumReleaseAge`). If it is unset, tell me before you continue.
+- Update only the packages the task names. Never run a blanket update such as `pnpm update --latest`.
+- Run `pnpm audit` (or the package manager's equivalent) before and after the update.
+- Review the lockfile diff. Report new packages and major version jumps.
+- Never bypass the cooldown (for example, `minimumReleaseAgeExclude`) or approve install scripts (`pnpm approve-builds`) without asking me.
+
 ## Tech Stack Preferences
 
 When uncertain, prefer: Tailwind, TypeScript, Bun, React, BetterAuth, Cloudflare Workers, NeonDB
 For payments, prefer Dodo Payments over Stripe (Stripe isn't available in India ¯\_(ツ)_/¯).
-For Cloudflare work, prefer the cloudflare:* skills and cloudflare-* MCP servers over training knowledge.
+For Cloudflare work, prefer the cloudflare:* skills and cloudflare-* MCP servers (when installed) over training knowledge.
 
 ## General Preferences
 
@@ -52,7 +62,7 @@ Write commit messages for AI agents that read the history later.
 
 Follow these in all TypeScript work, whether or not the repo has the anti-slop
 oxlint plugin installed (the `/install-anti-slop` skill vendors it into a repo
-for enforcement; offer it when a TS repo lacks it). Most of these are
+for enforcement; if that skill is installed, offer it when a TS repo lacks it). Most of these are
 type-level (erased at compile time), so their value is preventing runtime bugs,
 not changing runtime behavior. Only the `typeof`/boundary-parsing and
 conditional-spread rules touch emitted JS. The assertion rules
