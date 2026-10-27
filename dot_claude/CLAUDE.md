@@ -13,8 +13,19 @@
 ## Tech Stack Preferences
 
 When uncertain, prefer: Tailwind, TypeScript, Bun, React, BetterAuth, Cloudflare Workers, NeonDB
-For payments, prefer Dodo Payments over Stripe (Stripe isn't available in India).
+For payments, prefer Dodo Payments over Stripe (Stripe isn't available in India ¯\_(ツ)_/¯).
 For Cloudflare work, prefer the cloudflare:* skills and cloudflare-* MCP servers over training knowledge.
+
+## General Preferences
+
+- If asked to do too much work at once, stop and state that clearly please.
+- No em dashes in any output (prose, code comments, commit messages). Use commas, parentheses, or separate sentences instead.
+- No extra comments that are unnecessary or inconsistent with local style.
+- Keep the final summary concise (1-3 sentences).
+
+## Human-facing documentation
+
+Use Simplified Technical English (STE). Write short, direct sentences in active voice. Use consistent terms and give one instruction per step. Avoid jargon, idioms, and unnecessary words. Define necessary technical terms on first use. Preserve exact code identifiers, commands, API names, and UI labels.
 
 ## TypeScript: anti-slop rules
 
@@ -54,10 +65,3 @@ conditional-spread rules touch emitted JS. The assertion rules
   lowest priority of these rules).
 - Prefer inference, `as const`, `satisfies`, and named owner contracts over
   assertions and widening.
-
-## General Preferences
-
-- If asked to do too much work at once, stop and state that clearly please.
-- No em dashes in any output (prose, code comments, commit messages). Use commas, parentheses, or separate sentences instead.
-- No extra comments that are unnecessary or inconsistent with local style.
-- Keep the final summary concise (1-3 sentences).
