@@ -8,6 +8,9 @@
 #       unmanaged skills and symlinks into ~/.agents keep working alongside)
 #   dot_claude/<entry>        -> ~/.claude/<entry>          (CLAUDE.md, agents, ...)
 #
+# dot_claude/settings.json is skipped: Claude Code replaces that symlink with a
+# regular file, so linking it again would swap live settings for a stale copy.
+#
 # Anything already at a destination (that isn't the correct link) is moved
 # to ~/dotfiles-backup-<timestamp>/ rather than deleted.
 set -euo pipefail
@@ -29,6 +32,9 @@ link() {
   echo "linked:    $dst -> $src"
 }
 
+# Third-party bar plugins (omaplug) are submodules; a plain clone leaves them empty.
+git -C "$REPO" submodule update --init --recursive
+
 mkdir -p "$HOME/.config" "$HOME/.claude/skills" "$HOME/.codex"
 
 link "$REPO/dot_zshrc" "$HOME/.zshrc"
@@ -44,7 +50,7 @@ done
 
 for entry in "$REPO"/dot_claude/*; do
   name="$(basename "$entry")"
-  [ "$name" = "skills" ] && continue
+  [ "$name" = "skills" ] || [ "$name" = "settings.json" ] && continue
   link "$entry" "$HOME/.claude/$name"
 done
 

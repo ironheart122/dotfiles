@@ -13,8 +13,7 @@ each managed entry into `$HOME`, so editing a live config file edits the repo.
 | `dot_config/hypr/` | `~/.config/hypr` | Hyprland — monitors, keybindings, input, look & feel (Lua) |
 | `dot_config/omarchy/` | `~/.config/omarchy` | Quickshell config, forked bar plugins, branding, hooks |
 | `dot_config/ghostty/` | `~/.config/ghostty` | Terminal emulator |
-| `dot_config/{btop,fastfetch}/` | `~/.config/…` | System monitor / fetch |
-| `dot_config/lazygit/` | `~/.config/lazygit` | Git TUI |
+| `dot_config/btop/` | `~/.config/btop` | System monitor |
 | `dot_config/starship.toml` | `~/.config/starship.toml` | Shell prompt |
 | `dot_config/chrome-flags.conf` | `~/.config/chrome-flags.conf` | Chrome launch flags (Omarchy defaults plus in-RAM disk cache) |
 | `dot_codex/config.toml` | `~/.codex/config.toml` | Sanitized Codex CLI preferences |
@@ -23,13 +22,12 @@ each managed entry into `$HOME`, so editing a live config file edits the repo.
 | `dot_claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | Global Claude Code instructions |
 | `dot_claude/settings.json` | — | Claude Code settings — **not a live symlink**, see below |
 
-> **`settings.json` drifts.** `install.sh` does symlink it, but the live
-> `~/.claude/settings.json` is a regular file and its contents have diverged
-> from the repo copy — most likely because Claude Code rewrites settings by
-> atomic replace, which swaps a symlink for a real file. Either way the live
-> file is the real config and the repo copy is a stale snapshot. Edit
-> `~/.claude/settings.json` directly, and diff it against the repo before
-> committing anything here.
+> **`settings.json` drifts.** Claude Code rewrites its settings by atomic
+> replace, which swaps a symlink for a real file, so the live
+> `~/.claude/settings.json` is the real config and the repo copy is a stale
+> snapshot. `install.sh` deliberately skips it so a rerun can't overwrite live
+> settings. Edit `~/.claude/settings.json` directly, and diff it against the
+> repo before committing anything here.
 
 Dual-monitor layout: workspaces **1–7** (coding/deep work) on the right display,
 **8–14** (docs/browsing) on the left, all persistent.
@@ -48,7 +46,10 @@ Hyprland itself.
 `dot_config/omarchy/plugins/` holds forked bar widgets. Forking via
 `omarchy plugin clone` keeps local changes safe from package updates —
 currently `ironheart122.workspaces`, which shows per-monitor workspaces with
-occupancy and focus indicators.
+occupancy and focus indicators. Third-party plugins are git submodules pinned
+to a commit: `omaplug` ([fross100/omaplug](https://github.com/fross100/omaplug)),
+a plugin manager widget. Update one with
+`git -C dot_config/omarchy/plugins/omaplug pull` and commit the new pointer.
 
 Themes are no longer tracked here. The custom `aether` theme was dropped: it
 predated quattro (old per-app layout, no `colors.toml`), had gone unused, and
@@ -62,7 +63,7 @@ git clone <this-repo> ~/dotfiles
 ~/dotfiles/install.sh
 ```
 
-`install.sh` is idempotent. Anything already at a destination is moved to
+`install.sh` is idempotent and initializes the plugin submodules. Anything already at a destination is moved to
 `~/dotfiles-backup-<timestamp>/`, never deleted.
 
 **Adding something new to manage:** move the real dir/file into `dot_config/`
