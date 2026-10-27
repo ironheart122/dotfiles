@@ -1,86 +1,141 @@
 # dotfiles
 
-Personal [Omarchy](https://omarchy.org) (Arch Linux + Hyprland) desktop and
-tooling configuration. The repo is the source of truth; `install.sh` symlinks
-each managed entry into `$HOME`, so editing a live config file edits the repo.
-(One exception — see the note on `settings.json` below.)
+This repository contains the configuration for an [Omarchy](https://omarchy.org)
+desktop (Arch Linux and Hyprland). It also contains the configuration for some
+command-line tools.
+
+The repository is the source of truth. The `install.sh` script links each
+managed entry into `$HOME`. Thus, when you edit a live configuration file, you
+edit the repository. The file `dot_claude/settings.json` is the only exception.
 
 ## Layout
 
-| Path | Links to | What |
-|------|----------|------|
-| `dot_zshrc` | `~/.zshrc` | Public shell configuration; optionally sources private `~/.zshrc.local` |
-| `dot_config/hypr/` | `~/.config/hypr` | Hyprland — monitors, keybindings, input, look & feel (Lua) |
-| `dot_config/omarchy/` | `~/.config/omarchy` | Quickshell config, forked bar plugins, branding, hooks |
+| Path | Link in `$HOME` | Contents |
+|------|-----------------|----------|
+| `dot_zshrc` | `~/.zshrc` | Public shell configuration. It reads `~/.zshrc.local` if that file is available. |
+| `dot_config/hypr/` | `~/.config/hypr` | Hyprland monitors, keybindings, input, and appearance (Lua) |
+| `dot_config/omarchy/` | `~/.config/omarchy` | Quickshell configuration, bar plugins, branding, and hooks |
 | `dot_config/ghostty/` | `~/.config/ghostty` | Terminal emulator |
 | `dot_config/btop/` | `~/.config/btop` | System monitor |
 | `dot_config/starship.toml` | `~/.config/starship.toml` | Shell prompt |
-| `dot_config/chrome-flags.conf` | `~/.config/chrome-flags.conf` | Chrome launch flags (Omarchy defaults plus in-RAM disk cache) |
-| `dot_codex/config.toml` | `~/.codex/config.toml` | Sanitized Codex CLI preferences |
-| `dot_claude/skills/` | `~/.claude/skills/<skill>` | Homemade Claude Code skills (linked per-skill) |
-| `dot_claude/agents/` | `~/.claude/agents` | Custom subagent definitions |
+| `dot_config/chrome-flags.conf` | `~/.config/chrome-flags.conf` | Chrome launch flags. These are the Omarchy defaults, with the disk cache in RAM. |
+| `dot_codex/config.toml` | `~/.codex/config.toml` | Codex CLI preferences, with private paths removed |
+| `dot_claude/skills/` | `~/.claude/skills/<skill>` | Claude Code skills. The script links each skill separately. |
+| `dot_claude/agents/` | `~/.claude/agents` | Subagent definitions |
 | `dot_claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | Global Claude Code instructions |
-| `dot_claude/settings.json` | — | Claude Code settings — **not a live symlink**, see below |
+| `dot_claude/settings.json` | None | Claude Code settings. Refer to the caution below. |
 
-> **`settings.json` drifts.** Claude Code rewrites its settings by atomic
-> replace, which swaps a symlink for a real file, so the live
-> `~/.claude/settings.json` is the real config and the repo copy is a stale
-> snapshot. `install.sh` deliberately skips it so a rerun can't overwrite live
-> settings. Edit `~/.claude/settings.json` directly, and diff it against the
-> repo before committing anything here.
+> **CAUTION:** Do not use the repository copy of `settings.json` as the live
+> configuration. Claude Code replaces the symlink with a regular file when it
+> writes its settings. Thus, the live `~/.claude/settings.json` is the real
+> configuration, and the repository copy is an old snapshot. The `install.sh`
+> script does not link this file. Edit `~/.claude/settings.json` directly.
+> Compare it with the repository copy before you commit it.
 
-Dual-monitor layout: workspaces **1–7** (coding/deep work) on the right display,
-**8–14** (docs/browsing) on the left, all persistent.
+### Monitors and workspaces
+
+The desktop uses two monitors. All workspaces are persistent.
+
+- The right monitor (DELL, `DP-1`) shows workspaces 1 to 7. Use these
+  workspaces for code and deep work.
+- The left monitor (LG, `DP-2`) shows workspaces 8 to 14. Use these
+  workspaces for documents and the browser.
+- `SUPER + F1` to `SUPER + F4` go to workspaces 11 to 14. The Omarchy
+  defaults bind only workspaces 1 to 10.
 
 ## Omarchy 4.x (quattro)
 
-Quattro replaced the separate desktop components with a single Quickshell
-process, so configs for waybar, walker, mako, swayosd, hyprlock, and hypridle
-are gone from this repo — the shell owns the bar, launcher, notifications,
-OSDs, and lock screen now, configured via `dot_config/omarchy/shell.toml` and
-`shell.json`. Hyprland's own config also moved from `.conf` to Lua;
-`dot_config/hypr/` is Lua-only, apart from `hyprsunset.conf` and `xdph.conf`,
-which are read by hyprsunset and xdg-desktop-portal-hyprland rather than by
-Hyprland itself.
+Quattro uses one Quickshell process for the bar, launcher, notifications,
+on-screen displays, and lock screen. Thus, this repository has no
+configuration for waybar, walker, mako, swayosd, hyprlock, or hypridle. The
+files `dot_config/omarchy/shell.toml` and `shell.json` configure the shell.
 
-`dot_config/omarchy/plugins/` holds forked bar widgets. Forking via
-`omarchy plugin clone` keeps local changes safe from package updates —
-currently `ironheart122.workspaces`, which shows per-monitor workspaces with
-occupancy and focus indicators. Third-party plugins are git submodules pinned
-to a commit: `omaplug` ([fross100/omaplug](https://github.com/fross100/omaplug)),
-a plugin manager widget. Update one with
-`git -C dot_config/omarchy/plugins/omaplug pull` and commit the new pointer.
+The Hyprland configuration is in Lua. The directory `dot_config/hypr/`
+contains only Lua files, with two exceptions:
 
-Themes are no longer tracked here. The custom `aether` theme was dropped: it
-predated quattro (old per-app layout, no `colors.toml`), had gone unused, and
-its palette was byte-identical to upstream `tokyo-night`, which is the active
-theme. Omarchy's own themes live in `/usr/share/omarchy/themes/`.
+- hyprsunset reads `hyprsunset.conf`.
+- xdg-desktop-portal-hyprland reads `xdph.conf`.
 
-## Usage
+### Bar plugins
 
-```sh
-git clone <this-repo> ~/dotfiles
-~/dotfiles/install.sh
-```
+The directory `dot_config/omarchy/plugins/` contains the bar plugins.
 
-`install.sh` is idempotent and initializes the plugin submodules. Anything already at a destination is moved to
-`~/dotfiles-backup-<timestamp>/`, never deleted.
+- **Forked plugins.** The command `omarchy plugin clone` makes a local copy of
+  a plugin. Package updates do not change this copy. The forked plugin
+  `ironheart122.workspaces` shows the workspaces of each monitor. It also
+  shows which workspaces have windows and which workspace has focus.
+- **Third-party plugins.** Each third-party plugin is a git submodule at a
+  fixed commit. The plugin `omaplug`
+  ([fross100/omaplug](https://github.com/fross100/omaplug)) is a plugin
+  manager.
 
-**Adding something new to manage:** move the real dir/file into `dot_config/`
-(or `dot_claude/`) and rerun `install.sh` — it symlinks whatever is there.
-Keep machine-, credential-, and work-specific shell configuration in
-`~/.zshrc.local`; `dot_zshrc` sources it when present but does not track it.
-Skills under `dot_claude/skills/` are linked one by one, so downloaded skill
-collections (e.g. symlinks into `~/.agents`) coexist untouched.
+To update a third-party plugin, do these steps:
 
-## Excluded on purpose
+1. Pull the new commits:
+   `git -C dot_config/omarchy/plugins/omaplug pull`
+2. Commit the new submodule pointer.
 
-Secrets, browser profiles, application state, logs, editor backups, and
-wallpapers are intentionally **not** tracked — see [`.gitignore`](.gitignore).
-Only hand-edited configuration is committed. `~/.claude/skills/` entries that
-are symlinks into other collections (`~/.agents`, the Omarchy install) are
-left unmanaged here.
+### Themes
 
-Note that the active wallpaper is one of the untracked files, so
-`~/.local/state/omarchy/current/background` points into `dot_config/omarchy/`
-at a path a fresh clone won't have. Pick a background again after installing.
+This repository does not contain themes. The active theme is the Omarchy
+theme `tokyo-night`. The Omarchy themes are in `/usr/share/omarchy/themes/`.
+
+The old custom theme `aether` is removed for these reasons:
+
+- It used the old per-application layout and had no `colors.toml`.
+- It was not in use.
+- Its palette was the same as the `tokyo-night` palette.
+
+## Installation
+
+Do these steps:
+
+1. Clone the repository:
+   `git clone https://github.com/ironheart122/dotfiles.git ~/dotfiles`
+2. Run the script: `~/dotfiles/install.sh`
+3. Select a background again. Refer to the note in
+   [Files that are not tracked](#files-that-are-not-tracked).
+
+The script also initializes the plugin submodules. You can run the script
+again at any time. It does not change a link that is already correct. If a
+different file is at a destination, the script moves that file to
+`~/dotfiles-backup-<timestamp>/`. The script does not delete files.
+
+### Add a configuration to the repository
+
+Do these steps:
+
+1. Move the real directory or file into `dot_config/` or `dot_claude/`.
+2. Run `install.sh` again. The script links all entries in these directories.
+
+### Private shell configuration
+
+Put shell configuration that is specific to the machine, to credentials, or to
+work in `~/.zshrc.local`. The repository does not track this file.
+`dot_zshrc` reads it last, so it can override all other settings.
+
+### Skills from other sources
+
+The script links each skill in `dot_claude/skills/` separately. Thus, skill
+collections from other sources can stay in `~/.claude/skills/` (for example,
+symlinks into `~/.agents` or into the Omarchy installation). The repository
+does not manage these skills.
+
+## Files that are not tracked
+
+The repository contains only configuration that you edit manually. It does not
+track these items:
+
+- Secrets
+- Browser profiles
+- Application state
+- Logs
+- Editor backups
+- Wallpapers
+
+Refer to [`.gitignore`](.gitignore) for the full list.
+
+> **NOTE:** The active wallpaper is not tracked. The link
+> `~/.local/state/omarchy/current/background` points to a file in
+> `dot_config/omarchy/backgrounds/`. A new clone does not have this file.
+> Select a background again after the installation.
