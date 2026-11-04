@@ -22,6 +22,15 @@ hl.config({
   },
 })
 
+-- https://wiki.hypr.land/Configuring/Basics/Variables/#render
+hl.config({
+  render = {
+    -- Don't flip the monitors into HDR when a fullscreen app asks for it. The
+    -- default (1) modesets both displays and blanks them on every fullscreen.
+    cm_auto_hdr = 0,
+  },
+})
+
 -- https://wiki.hypr.land/Configuring/Basics/Variables/#animations
 -- hl.config({
 --   animations = {
