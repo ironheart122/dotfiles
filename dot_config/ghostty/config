@@ -13,8 +13,8 @@ font-style = Regular
 config-file = font-size.conf
 
 # Window
-window-padding-x = 16
-window-padding-y = 16
+window-padding-x = 14
+window-padding-y = 14
 confirm-close-surface=false
 resize-overlay = never
 window-show-tab-bar=always
