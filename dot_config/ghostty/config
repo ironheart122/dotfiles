@@ -6,8 +6,8 @@ theme = Snazzy
 # config-file = ?"~/.local/state/omarchy/current/theme/ghostty.conf"
 
 # Font
-font-family = "JetBrainsMono Nerd Font Mono"
-font-style = Medium
+font-family = "JetBrainsMono Nerd Font"
+font-style = Regular
 # Size is deliberately kept out of this file — see font-size.conf for why.
 # Path is relative to this file; a later include wins over an earlier value.
 config-file = font-size.conf
@@ -44,5 +44,3 @@ mouse-scroll-multiplier = 0.95
 
 # Fix general slowness on hyprland (https://github.com/ghostty-org/ghostty/discussions/3224)
 async-backend = epoll
-
-scrollback-limit = 10000
