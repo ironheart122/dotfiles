@@ -78,8 +78,8 @@ source $ZSH/oh-my-zsh.sh
 
 # Terminal title (OSC 2): always ends in the CWD, prefixed by the running command.
 _title() { print -rn -- $'\e]2;'"$1"$'\a' }
-_title_cwd() { _title "${(%):-%~}" }
-_title_cmd() { local c=${${1//[[:cntrl:]]}%% *}; _title "${c:t} — ${(%):-%~}" }
+_title_cwd() { _title "${(%):-%2~}" }
+_title_cmd() { local c=${${1//[[:cntrl:]]}%% *}; _title "${c:t} — ${(%):-%2~}" }
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd _title_cwd
 add-zsh-hook preexec _title_cmd
