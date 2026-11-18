@@ -14,6 +14,12 @@
 - The spec covers the goal, the planned changes (files and behavior), what is out of scope, open questions, and how you will verify the result.
 - After I approve, follow the spec. If the plan has to change, update the artifact and tell me before you continue.
 
+## Learning
+
+- In each spec, add a "Decisions" section: each non-obvious choice, the alternative you rejected, and why.
+- After the summary, add one "New to this repo" line: any API, pattern, or language feature the diff uses that the repo did not use before. Omit it if there is none.
+- Do not explain things a senior TypeScript developer already knows.
+
 ## Package Managers
 
 - Match the project's package manager, even npm or yarn.
