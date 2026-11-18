@@ -410,3 +410,5 @@ esac
 # Machine- and work-specific configuration stays outside the public repository.
 # Sourced last so it can override anything above.
 [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+
+alias cam='mpv --profile=cam rtsp://localhost:8555/mi360'
